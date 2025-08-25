@@ -40,12 +40,14 @@ Datum
 pg_hello(PG_FUNCTION_ARGS)
 {
     text *name = PG_GETARG_TEXT_PP(0);
+    char *cname;
+    StringInfoData buf;
+    text *result;
 
     // Convert to C string
-    char *cname = text_to_cstring(name);
+    cname = text_to_cstring(name);
 
     // Build result string with repeats
-    StringInfoData buf;
     initStringInfo(&buf);
     for (int i = 0; i < hello_repeat; i++)
     {
@@ -53,7 +55,7 @@ pg_hello(PG_FUNCTION_ARGS)
         appendStringInfo(&buf, "Hello, %s!", cname);
     }
 
-    text *result = cstring_to_text(buf.data);
+    result = cstring_to_text(buf.data);
     PG_RETURN_TEXT_P(result);
 }
 
@@ -73,24 +75,30 @@ now_ms(PG_FUNCTION_ARGS)
 Datum
 spi_version(PG_FUNCTION_ARGS)
 {
+    const char *query = "SELECT version()";
+    int ret;
+    HeapTuple tuple;
+    TupleDesc tupdesc;
+    bool isnull = false;
+    Datum d;
+    text *result;
+
     if (SPI_connect() != SPI_OK_CONNECT)
         ereport(ERROR, (errmsg("SPI_connect failed")));
 
-    const char *query = "SELECT version()";
-    int ret = SPI_execute(query, true, 1);
+    ret = SPI_execute(query, true, 1);
     if (ret != SPI_OK_SELECT || SPI_processed != 1)
     {
         SPI_finish();
         ereport(ERROR, (errmsg("SPI_execute failed")));
     }
 
-    HeapTuple tuple = SPI_tuptable->vals[0];
-    TupleDesc tupdesc = SPI_tuptable->tupdesc;
+    tuple = SPI_tuptable->vals[0];
+    tupdesc = SPI_tuptable->tupdesc;
 
-    bool isnull = false;
-    Datum d = SPI_getbinval(tuple, tupdesc, 1, &isnull);
+    d = SPI_getbinval(tuple, tupdesc, 1, &isnull);
 
-    text *result = isnull ? cstring_to_text("NULL") : DatumGetTextPP(d);
+    result = isnull ? cstring_to_text("NULL") : DatumGetTextPP(d);
 
     SPI_finish();
     PG_RETURN_TEXT_P(cstring_to_text(text_to_cstring(result)));
