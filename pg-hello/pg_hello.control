@@ -2,5 +2,4 @@
 comment = 'Tiny sample extension (C functions, GUC, SPI demo)'
 default_version = '1.0'
 relocatable = true
-schema = public
 requires = ''
