@@ -1,0 +1,16 @@
+CREATE EXTENSION pg_hello;
+SET
+           greet            
+---------------------------
+ Hello, Suleiman! Hello, Suleiman!
+(1 row)
+
+  ok  
+------
+ t
+(1 row)
+
+ has_ver 
+---------
+ t
+(1 row)

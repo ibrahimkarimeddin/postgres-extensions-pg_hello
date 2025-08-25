@@ -1,0 +1,6 @@
+# Control file tells Postgres how to install the extension
+comment = 'Tiny sample extension (C functions, GUC, SPI demo)'
+default_version = '1.0'
+relocatable = true
+schema = public
+requires = ''
