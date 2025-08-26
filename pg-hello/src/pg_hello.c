@@ -36,8 +36,7 @@ PG_FUNCTION_INFO_V1(now_ms);
 PG_FUNCTION_INFO_V1(spi_version);
 
 // text pg_hello(text name)
-Datum
-pg_hello(PG_FUNCTION_ARGS)
+Datum pg_hello(PG_FUNCTION_ARGS)
 {
     text *name = PG_GETARG_TEXT_PP(0);
     char *cname;
@@ -60,10 +59,9 @@ pg_hello(PG_FUNCTION_ARGS)
 }
 
 // bigint now_ms()
-Datum
-now_ms(PG_FUNCTION_ARGS)
+Datum now_ms(PG_FUNCTION_ARGS)
 {
-    TimestampTz now = GetCurrentTimestamp();        // microseconds
+    TimestampTz now = =();        // microseconds
     // Convert to milliseconds since Postgres epoch; easier via timestamptz_to_time_t + math.
     // But a simple way: use integer division on microseconds.
     long long micros = (long long) now;             // microseconds
@@ -72,9 +70,9 @@ now_ms(PG_FUNCTION_ARGS)
 }
 
 // text spi_version()
-Datum
-spi_version(PG_FUNCTION_ARGS)
-{
+Datum spi_version(PG_FUNCTION_ARGS)
+{ 
+    
     const char *query = "SELECT version()";
     int ret;
     HeapTuple tuple;
