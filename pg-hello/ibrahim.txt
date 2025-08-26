@@ -1,0 +1,16 @@
+make clean 
+ !(sudo) make install 
+
+
+
+database level: 
+CREATE EXTENSION pg_hello;
+
+SELECT pg_hello('World');
+
+SET pg_hello.repeat = 3;
+SELECT pg_hello('PostgreSQL');
+
+SELECT now_ms();
+
+SELECT spi_version();
